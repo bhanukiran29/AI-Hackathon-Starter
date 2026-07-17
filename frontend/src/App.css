@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #121212;
+  color: white;
+}
+
+.container {
+  width: 80%;
+  max-width: 900px;
+  margin: auto;
+  padding: 40px;
+}
+
+h1 {
+  text-align: center;
+}
+
+select,
+textarea,
+button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  font-size: 16px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  cursor: pointer;
+}
+
+pre {
+  margin-top: 20px;
+  background: #222;
+  padding: 20px;
+  white-space: pre-wrap;
+}
