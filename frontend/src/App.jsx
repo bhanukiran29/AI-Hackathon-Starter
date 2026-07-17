@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { askAI } from "./services/api";
 import "./App.css";
 
 function App() {
@@ -8,14 +8,14 @@ function App() {
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function askAI() {
+  async function handleAskAI() {
     if (!prompt.trim()) return;
 
     setLoading(true);
     setResponse("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/chat", {
+      const res = await askAI({
         provider,
         prompt,
         systemPrompt: "",
@@ -23,7 +23,7 @@ function App() {
         maxTokens: 1000,
       });
 
-      setResponse(res.data.response);
+      setResponse(res.response);
     } catch (err) {
       setResponse(err.response?.data?.error || err.message);
     }
@@ -51,7 +51,7 @@ function App() {
         onChange={(e) => setPrompt(e.target.value)}
       />
 
-      <button onClick={askAI} disabled={loading}>
+      <button onClick={handleAskAI} disabled={loading}>
         {loading ? "Thinking..." : "Ask AI"}
       </button>
 
