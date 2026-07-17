@@ -1,14 +1,8 @@
 import Groq from "groq-sdk";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+import { config } from "../config/env.js";
 
 const groq = new Groq({
-    apiKey: process.env.GROQ_API_KEY,
+    apiKey: config.GROQ_API_KEY,
 });
 
 export async function askGroq(options) {

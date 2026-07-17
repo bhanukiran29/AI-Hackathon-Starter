@@ -1,6 +1,6 @@
 import { chatService } from "../services/chatService.js";
 
-export async function chatController(req, res) {
+export async function chatController(req, res, next) {
     try {
         const {
             provider,
@@ -10,10 +10,17 @@ export async function chatController(req, res) {
             maxTokens
         } = req.body;
 
-        if (!provider || !prompt) {
+        if (!provider) {
             return res.status(400).json({
                 success: false,
-                message: "provider and prompt are required."
+                message: "provider is required."
+            });
+        }
+
+        if (!prompt) {
+            return res.status(400).json({
+                success: false,
+                message: "prompt is required."
             });
         }
 
@@ -32,11 +39,6 @@ export async function chatController(req, res) {
         });
 
     } catch (err) {
-        console.error(err);
-
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
+        next(err);
     }
 }

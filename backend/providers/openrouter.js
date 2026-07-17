@@ -1,10 +1,4 @@
-    import dotenv from "dotenv";
-    import path from "path";
-    import { fileURLToPath } from "url";
-
-    const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    dotenv.config({ path: path.resolve(__dirname, "../.env") });
-    dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+    import { config } from "../config/env.js";
 
     export async function askOpenRouter(options) {
         const {
@@ -19,7 +13,7 @@
             {
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                    Authorization: `Bearer ${config.OPENROUTER_API_KEY}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({

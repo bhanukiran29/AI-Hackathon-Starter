@@ -146,11 +146,25 @@ Configure local environments for each application:
 
 ---
 
-## Screenshots
+## 📸 Screenshots
 
-*(Upload screenshots showing your main screen, drop-downs, and response outputs here)*
+Make your repository standout to hackathon judges by adding high-quality preview screenshots:
 
-![App Preview](screenshots/app_preview.png)
+### 📱 Homepage
+*A clean landing page demonstrating responsive layout and custom inputs.*
+![Homepage Screenshot](screenshots/homepage.png)
+
+### 🔄 Provider Switching
+*Real-time selection of LLM backends (Gemini, Groq, OpenRouter).*
+![Provider Switching Screenshot](screenshots/provider_switching.png)
+
+### 📝 Markdown Rendering
+*Perfect presentation of headers, lists, code highlighting, and copied status.*
+![Markdown Rendering Screenshot](screenshots/markdown_rendering.png)
+
+### 📁 Folder Structure
+*Clean organization mapping front-to-back components.*
+![Folder Structure Screenshot](screenshots/folder_structure.png)
 
 ---
 
