@@ -5,29 +5,30 @@ const groq = new Groq({
     apiKey: config.GROQ_API_KEY,
 });
 
+const DEFAULT_MODEL = "llama-3.3-70b-versatile";
+
 export async function askGroq(options) {
     const {
-        prompt,
+        messages,
         systemPrompt = "",
         temperature = 0.7,
         maxTokens = 1000
     } = options;
 
+    const formattedMessages = [
+        ...(systemPrompt ? [{ role: "system", content: systemPrompt }] : []),
+        ...messages
+    ];
+
     const response = await groq.chat.completions.create({
-        model: "llama-3.3-70b-versatile",
+        model: DEFAULT_MODEL,
         temperature,
         max_tokens: maxTokens,
-        messages: [
-            {
-                role: "system",
-                content: systemPrompt,
-            },
-            {
-                role: "user",
-                content: prompt,
-            },
-        ],
+        messages: formattedMessages,
     });
 
-    return response.choices[0].message.content;
+    return {
+        response: response.choices[0].message.content,
+        model: DEFAULT_MODEL
+    };
 }

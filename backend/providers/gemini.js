@@ -6,14 +6,20 @@ const ai = new GoogleGenAI({
 });
 
 const MODELS = [
-    "gemini-flash-latest",
-    "gemini-3.1-flash-lite",
+    "gemini-2.5-flash",
     "gemini-2.0-flash"
 ];
 
+function formatGeminiMessages(messages) {
+    return messages.map(msg => ({
+        role: msg.role === "assistant" ? "model" : "user",
+        parts: [{ text: msg.content }]
+    }));
+}
+
 export async function askGemini(options) {
     const {
-        prompt,
+        messages,
         systemPrompt = "",
         temperature = 0.7,
         maxTokens = 1000
@@ -27,12 +33,20 @@ export async function askGemini(options) {
 
             const response = await ai.models.generateContent({
                 model,
-                contents: prompt
+                contents: formatGeminiMessages(messages),
+                config: {
+                    systemInstruction: systemPrompt || undefined,
+                    temperature: temperature,
+                    maxOutputTokens: maxTokens
+                }
             });
 
             console.log(`✅ Success with ${model}`);
 
-            return response.text;
+            return {
+                response: response.text,
+                model: model
+            };
 
         } catch (err) {
             console.log(`❌ ${model} failed`);
