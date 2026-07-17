@@ -1,5 +1,10 @@
 import { useState } from "react";
 import { askAI } from "./services/api";
+import Header from "./components/Header";
+import ProviderSelector from "./components/ProviderSelector";
+import PromptInput from "./components/PromptInput";
+import AskButton from "./components/AskButton";
+import ResponseCard from "./components/ResponseCard";
 import "./App.css";
 
 function App() {
@@ -33,31 +38,26 @@ function App() {
 
   return (
     <div className="container">
-      <h1>🤖 AI Hackathon Starter</h1>
+      <Header />
 
-      <select
-        value={provider}
-        onChange={(e) => setProvider(e.target.value)}
-      >
-        <option value="gemini">Gemini</option>
-        <option value="groq">Groq</option>
-        <option value="openrouter">OpenRouter</option>
-      </select>
-
-      <textarea
-        rows="8"
-        placeholder="Ask anything..."
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
+      <ProviderSelector
+        provider={provider}
+        setProvider={setProvider}
       />
 
-      <button onClick={handleAskAI} disabled={loading}>
-        {loading ? "Thinking..." : "Ask AI"}
-      </button>
+      <PromptInput
+        prompt={prompt}
+        setPrompt={setPrompt}
+      />
 
-      <h2>Response</h2>
+      <AskButton
+        loading={loading}
+        onClick={handleAskAI}
+      />
 
-      <pre>{response}</pre>
+      <ResponseCard
+        response={response}
+      />
     </div>
   );
 }
