@@ -58,3 +58,50 @@ export async function askGemini(options) {
 
     throw lastError;
 }
+
+export async function* streamGemini(options) {
+    const {
+        messages,
+        systemPrompt = "",
+        temperature = 0.7,
+        maxTokens = 1000,
+        signal
+    } = options;
+
+    let lastError;
+
+    for (const model of MODELS) {
+        try {
+            console.log(`🚀 Trying streaming model: ${model}`);
+
+            const responseStream = await ai.models.generateContentStream({
+                model,
+                contents: formatGeminiMessages(messages),
+                config: {
+                    systemInstruction: systemPrompt || undefined,
+                    temperature: temperature,
+                    maxOutputTokens: maxTokens
+                }
+            });
+
+            console.log(`✅ Success streaming with ${model}`);
+
+            for await (const chunk of responseStream) {
+                if (signal?.aborted) {
+                    throw new Error("Stream aborted by client");
+                }
+                yield { token: chunk.text, model };
+            }
+            return;
+
+        } catch (err) {
+            console.log(`❌ Streaming model ${model} failed:`, err.message);
+            lastError = err;
+            if (signal?.aborted) {
+                break;
+            }
+        }
+    }
+
+    throw lastError;
+}

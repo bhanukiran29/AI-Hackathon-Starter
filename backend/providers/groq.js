@@ -32,3 +32,36 @@ export async function askGroq(options) {
         model: DEFAULT_MODEL
     };
 }
+
+export async function* streamGroq(options) {
+    const {
+        messages,
+        systemPrompt = "",
+        temperature = 0.7,
+        maxTokens = 1000,
+        signal
+    } = options;
+
+    const formattedMessages = [
+        ...(systemPrompt ? [{ role: "system", content: systemPrompt }] : []),
+        ...messages
+    ];
+
+    const stream = await groq.chat.completions.create({
+        model: DEFAULT_MODEL,
+        temperature,
+        max_tokens: maxTokens,
+        messages: formattedMessages,
+        stream: true,
+    });
+
+    for await (const chunk of stream) {
+        if (signal?.aborted) {
+            throw new Error("Stream aborted by client");
+        }
+        const token = chunk.choices[0]?.delta?.content || "";
+        if (token) {
+            yield { token, model: DEFAULT_MODEL };
+        }
+    }
+}

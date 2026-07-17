@@ -4,11 +4,23 @@ import ReactMarkdown from "react-markdown";
 export default function ResponseCard({ messages }) {
   const [copiedIndex, setCopiedIndex] = useState(null);
   const bottomRef = useRef(null);
+  const lastScrollTime = useRef(0);
 
-  // Auto-scroll to bottom on new messages
+  // Throttled auto-scroll to bottom on new tokens to avoid browser jitter
   useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    const scroll = () => {
+      if (bottomRef.current) {
+        bottomRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+
+    const now = Date.now();
+    if (now - lastScrollTime.current > 150) {
+      scroll();
+      lastScrollTime.current = now;
+    } else {
+      const timer = setTimeout(scroll, 150);
+      return () => clearTimeout(timer);
     }
   }, [messages]);
 
@@ -48,7 +60,7 @@ export default function ResponseCard({ messages }) {
                   </span>
                 )}
               </div>
-              {!isUser && !msg.isError && (
+              {!isUser && !msg.isError && !msg.isStreaming && (
                 <button 
                   className="copy-btn" 
                   style={{ padding: "4px 8px", fontSize: "12px" }}
@@ -61,6 +73,12 @@ export default function ResponseCard({ messages }) {
             <div className="message-content">
               {isUser ? (
                 <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{msg.content}</p>
+              ) : msg.isStreaming ? (
+                msg.content === "" ? (
+                  <span className="typing-indicator" style={{ fontStyle: "italic", color: "#888" }}>Thinking...</span>
+                ) : (
+                  <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{msg.content}</p>
+                )
               ) : (
                 <div className="markdown-content">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
