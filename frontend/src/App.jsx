@@ -18,6 +18,9 @@ function App() {
       const res = await axios.post("http://localhost:5000/api/chat", {
         provider,
         prompt,
+        systemPrompt: "",
+        temperature: 0.7,
+        maxTokens: 1000,
       });
 
       setResponse(res.data.response);

@@ -2,21 +2,20 @@ import { askGemini } from "./gemini.js";
 import { askGroq } from "./groq.js";
 import { askOpenRouter } from "./openrouter.js";
 
-export async function askAI(provider, prompt) {
+export async function askAI(options) {
 
-    switch (provider) {
+    switch (options.provider) {
 
         case "gemini":
-            return await askGemini(prompt);
+            return await askGemini(options);
 
         case "groq":
-            return await askGroq(prompt);
+            return await askGroq(options);
 
         case "openrouter":
-            return await askOpenRouter(prompt);
+            return await askOpenRouter(options);
 
         default:
             throw new Error("Unknown provider");
     }
-
 }

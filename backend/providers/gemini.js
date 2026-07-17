@@ -4,37 +4,45 @@ import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
 
 const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
+    apiKey: process.env.GEMINI_API_KEY,
 });
 
 const MODELS = [
-  "gemini-flash-latest",
-  "gemini-3.1-flash-lite",
-  "gemini-2.0-flash"
+    "gemini-flash-latest",
+    "gemini-3.1-flash-lite",
+    "gemini-2.0-flash"
 ];
 
-export async function askGemini(prompt) {
-  let lastError;
+export async function askGemini(options) {
+    const {
+        prompt,
+        systemPrompt = "",
+        temperature = 0.7,
+        maxTokens = 1000
+    } = options;
 
-  for (const model of MODELS) {
-    try {
-      console.log(`🚀 Trying model: ${model}`);
+    let lastError;
 
-      const response = await ai.models.generateContent({
-        model,
-        contents: prompt,
-      });
+    for (const model of MODELS) {
+        try {
+            console.log(`🚀 Trying model: ${model}`);
 
-      console.log(`✅ Success with ${model}`);
+            const response = await ai.models.generateContent({
+                model,
+                contents: prompt
+            });
 
-      return response.text;
-    } catch (err) {
-      console.log(`❌ ${model} failed`);
-      console.log(err.message);
+            console.log(`✅ Success with ${model}`);
 
-      lastError = err;
+            return response.text;
+
+        } catch (err) {
+            console.log(`❌ ${model} failed`);
+            console.log(err.message);
+
+            lastError = err;
+        }
     }
-  }
 
-  throw lastError;
+    throw lastError;
 }
