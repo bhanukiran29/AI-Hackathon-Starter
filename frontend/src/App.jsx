@@ -48,6 +48,7 @@ function App() {
       <PromptInput
         prompt={prompt}
         setPrompt={setPrompt}
+        onSubmit={handleAskAI}
       />
 
       <AskButton
